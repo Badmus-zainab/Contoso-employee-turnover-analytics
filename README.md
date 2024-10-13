@@ -36,6 +36,11 @@ Identifying key factors contributing to employee attrition and how it can be sol
 - Location_city - The city where the employee work location is based
 -Location_state – The state where the employee work location is based.
 
+### Tools
+SQL - Data cleaning and analysis
+
+Excel - Visualization
+
 ### Methodology
 #### Data cleaning 
 - Removing the duplicate, the initial rows is 22,227 after removing the duplicate final query have 22214 rows which mean they are 13 duplicates
@@ -43,6 +48,20 @@ Identifying key factors contributing to employee attrition and how it can be sol
 - Correcting the misspelt words in the dataset, I found some misspelt words in job title (‘Relationshiop’,’Associate Profssor’,’ Assistant Profssor’,’ Coordiate’).
 - Formatting the date in the termdate separating the date from the time in the termdate, I added a new column (termdate_only) with the date data type
 - Getting the age from the birthdate and hire age from hire date.
+
+  #### Exploratory Data Analysis
+ - Calculating tenure at which the employee has used before leaving the company and created a status column to identify the employee who are still active or left.
+- Also group the age in three forms based on the actual range of age in the dataset so as to use it for analysis where 22-30 is mid-Adult, 31-45 is Adult, 46-60 is old and the Average age is 41.
+- Calculating the total number of employees which is 22214, the total number employee that left which is 3929 and the total number active employees is 18285.
+
+  #### Statistical Analysis
+  Descriptive Analysis was used in this analysis to summarize and described the attrition rate across different demographic groups (gender, race, and age) and summarize attrition rated across job related factors, I used it to analyze all my objective questions.
+
+  ### Analysis
+  
+
+
+  
 
 
 
