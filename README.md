@@ -1,7 +1,20 @@
 # Contoso Employee Turnover Analytics
-
 ## Insights And Solutions for Retention
 
+## Table of contents
+- [Project Overview](#project-overview)
+- [Problem Statement](#problem-statement)
+- [Problem Objectives](#problem-objectives)
+- [Data Desription](#data-description)
+- [Tools](#tools)
+- [Methodology](#methodology)
+- [Data Cleaning](#data-cleaning)
+- [Exploratory Data Analysis](#exploratory-data-analysis)
+- [Statistical Analysis](#statistical-analysis)
+- [Data Analysis](#data-analysis)
+- [Conclusions](#conclusions)
+- [Recommendations](#recommendations)
+  
 ### Project Overview
 Contoso company has been facing employee turnover, where the HR department reach out to me and provide a dataset containing the information on employee demographic, job roles, races and termination date, hire date, gender. The company offers working from Headquarter and remotely.
 ![Screenshot_24](https://github.com/user-attachments/assets/d9857258-3514-4b50-8ba9-353cda533fc9)
@@ -10,7 +23,7 @@ Contoso company has been facing employee turnover, where the HR department reach
 ### Problem Statement
 Identifying key factors contributing to employee attrition and how it can be solved.
 
-### Problem Objective
+### Problem Objectives
 -	Demographics factors: Which gender, races and age group has the highest attrition rate?
 -	Job related factors: Determine which department, job title, tenure are most strongly associated with higher employee attrition?
 -	Location based trends: Are there difference in attrition rates between different location headquarters vs Remote?
@@ -294,7 +307,7 @@ ORDER BY
 ##### Key insight
 August showing the highest attrition rate indicates that the summer months might be a critical period for employee turnover, employees may use mid-year evaluations or performance reviews as a time to evaluate their job satisfaction and explore new opportunities.
 
-### Conclusion
+### Conclusions
 The analysis of attrition rates reveals several critical issues that could impact the company's overall stability and growth if not addressed effectively. 
 - The higher attrition rate among female employees highlights a pressing issue in the company's retention strategy. This disparity suggests that female employees may not be receiving the same level of support, career development, or growth opportunities as their male counterparts. If this issue is left unresolved, it could lead to a significant talent gap, diminished diversity within the workforce, and increased recruitment costs over time.
 - The higher attrition rate among employees identifying as Two or More Races points to potential issues with inclusivity and support for diverse racial identities. This demographic may face challenges that are not being adequately addressed by the company's current diversity and inclusion efforts. Conversely, the lower turnover rates among Black and Asian employees suggest better retention within these groups. However, this does not necessarily mean that diversity and inclusion efforts are fully effective; it may still be necessary to enhance these initiatives to improve retention across all racial demographics. 
@@ -307,7 +320,7 @@ The analysis of attrition rates reveals several critical issues that could impac
 - Additionally, the elevated attrition rate observed in August indicates a need for targeted retention strategies during this peak period. Identifying and addressing the underlying causes of turnover in August can prevent further increases in attrition rates.
 There is a significant difference in retention between employees hired more recently and those with longer tenure, the company appear to be losing more of its long-term employees indicating burnout or desire for new challenge while recently hired employees are still integrating into the company and are more engaged with their roles.
 
-### Recommendation
+### Recommendations
 To effectively tackle employee turnover, the company needs to implement a series of targeted strategies aimed at improving retention across different groups and locations. Key areas for focus include gathering direct feedback, enhancing diversity and inclusion, and addressing specific departmental and regional challenges.
 - Feedback and Support for Female Employees: The company should start by actively seeking direct feedback from female employees to identify specific challenges they face, such as issues related to work-life balance, pay equity, or career advancement opportunities. Develop mentorship and career development initiatives specifically designed to support female employees, fostering their professional growth and increasing retention rates.
 Conduct an internal review of existing gender-related workplace policies to ensure they promote an inclusive and supportive environment for all employees.
