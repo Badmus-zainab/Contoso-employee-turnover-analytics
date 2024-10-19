@@ -196,6 +196,138 @@ WITH employee_counts AS (
 ##### Key insight
 High attrition in specific locations can indicate underlying issues such as unfavorable working conditions, lack of local resources, or a disconnect between the company's culture and the local workforce. Employees in these locations may also face longer commutes, limited access to amenities, or less competitive compensation compared to other regions, contributing to their decision to leave.
 
+-	The attrition rate by location state - Analyzing attrition rates by state location helps identify geographic areas with higher employee turnover. Understanding these differences allows organizations to tailor retention strategies to address the unique needs of employees in different states.
+
+```sql
+WITH employee_counts AS (
+ SELECT location_state, 
+ COUNT (*) AS total_employee,
+ SUM (CASE WHEN termdate_only IS NOT NULL THEN 1 ELSE 0 END)
+ AS employee_left
+ FROM NEW_HR_DATA 
+ GROUP BY location_state)
+ SELECT location_state, total_employee, employee_left,
+ CASE WHEN total_employee > 0 THEN
+ CAST (ROUND ((employee_left * 100.0 /total_employee),2) AS DECIMAL (5,2))
+ ELSE 0
+ END AS attrition_rate_by_location_state
+ FROM employee_counts
+ ORDER BY attrition_rate_by_location_state DESC;
+ ```
+#### Report/Visuals
+![image](https://github.com/user-attachments/assets/5553d4ba-2845-433f-811d-dff232517ca2)
+![image](https://github.com/user-attachments/assets/88148cd9-c3d4-4926-9dc8-97dada515ba7)
+##### Key insight
+This indicates that employees in these states may encounter unique challenges especially in Indiana which has the highest attrition rate, such as local economic conditions, workplace dissatisfaction, or lack of growth opportunities. Implementing targeted retention strategies in these states.
+
+-	The employee turnover by tenure - Analyzing attrition rates based on tenure helps identify when employees are most likely to leave, revealing critical points in their career lifecycle. This insight allows organizations to implement targeted interventions, such as enhanced onboarding, mid-career development opportunities, and retention initiatives, aimed at reducing turnover during key stages of employment.
+
+```sql
+WITH tenure_counts AS (
+ SELECT CASE
+ WHEN tenure BETWEEN 0 AND 2 THEN '0-2 years'
+ WHEN tenure BETWEEN 3 AND 5 THEN '3-5 years'
+ when tenure BETWEEN 6 AND 8 THEN '6-8 years'
+ WHEN tenure >8  THEN '9+ years'
+ ELSE 'UNKONWN'
+ END AS tenure_group,
+ COUNT (*) AS total_employee,
+ SUM (CASE WHEN termdate_only IS NOT NULL THEN 1 ELSE 0 END)
+ AS employee_left
+ FROM NEW_HR_DATA
+ GROUP BY CASE
+  WHEN tenure BETWEEN 0 AND 2 THEN '0-2 years'
+ WHEN tenure BETWEEN 3 AND 5 THEN '3-5 years'
+ when tenure BETWEEN 6 AND 8 THEN '6-8 years'
+ WHEN tenure >8 THEN '9+ years'
+ ELSE 'UNKONWN'
+ END)
+ SELECT tenure_group, total_employee, employee_left
+ FROM tenure_counts
+ ORDER BY employee_left;
+ ```
+#### Report/Visuals
+![image](https://github.com/user-attachments/assets/75aef0bf-ceaf-4b46-91ed-bd1f29e378cf)
+![image](https://github.com/user-attachments/assets/d74ca6a9-1bd4-4c80-be02-71b670ec8b9c)
+##### Key insight
+This suggests that long-term employees may become disengaged or feel that they have limited career advancement opportunities after a certain period of time. Other potential factors include burnout, dissatisfaction with compensation, or a lack of alignment with the company's direction as it evolves over time. Employees who have been with the company for an extended period may also leave if they feel underappreciated or if they seek new challenges elsewhere.
+
+- The rate of employee turnover by month - Analyzing employee turnover rates by month reveals patterns in when employees are most likely to leave. This insight helps organizations identify seasonal trends, potential workplace issues, or external factors impacting retention, allowing them to plan targeted interventions, improve workforce stability, and proactively address turnover during high-risk periods.
+
+```sql
+WITH monthly_attrition AS (
+    SELECT 
+        DATEPART(MONTH, termdate_only) AS month_number,
+        DATENAME(MONTH, termdate_only) AS month_name,
+        COUNT(*) AS employees_left
+    FROM 
+        NEW_HR_DATA
+    WHERE 
+        termdate_only IS NOT NULL
+    GROUP BY 
+        DATEPART(MONTH, termdate_only), 
+        DATENAME(MONTH, termdate_only)
+),
+max_attrition AS (
+    SELECT 
+        MAX(employees_left) AS max_employees_left
+    FROM 
+        monthly_attrition
+)
+SELECT 
+    ma. month_name, 
+    ma.employees_left,
+    CASE 
+        WHEN ma.employees_left = maxa.max_employees_left THEN 'Highest' 
+        ELSE '' 
+    END AS max_attrition_flag
+FROM 
+    monthly_attrition ma
+CROSS JOIN 
+    max_attrition maxa
+ORDER BY 
+    ma.employees_left;
+```
+#### Report/Visuals
+![image](https://github.com/user-attachments/assets/effb103a-3b57-4e4d-8ebd-e523042e500d)
+![image](https://github.com/user-attachments/assets/6a639041-333e-4392-8e61-3c82395927a0)
+##### Key insight
+August showing the highest attrition rate indicates that the summer months might be a critical period for employee turnover, employees may use mid-year evaluations or performance reviews as a time to evaluate their job satisfaction and explore new opportunities.
+
+### Conclusion
+The analysis of attrition rates reveals several critical issues that could impact the company's overall stability and growth if not addressed effectively. 
+- The higher attrition rate among female employees highlights a pressing issue in the company's retention strategy. This disparity suggests that female employees may not be receiving the same level of support, career development, or growth opportunities as their male counterparts. If this issue is left unresolved, it could lead to a significant talent gap, diminished diversity within the workforce, and increased recruitment costs over time.
+- The higher attrition rate among employees identifying as Two or More Races points to potential issues with inclusivity and support for diverse racial identities. This demographic may face challenges that are not being adequately addressed by the company's current diversity and inclusion efforts. Conversely, the lower turnover rates among Black and Asian employees suggest better retention within these groups. However, this does not necessarily mean that diversity and inclusion efforts are fully effective; it may still be necessary to enhance these initiatives to improve retention across all racial demographics. 
+- The higher attrition rates among Mid-Adults and Adults indicate that younger employees, who may represent the future leadership pipeline, are leaving the company more frequently. This could be due to unmet career expectations or a lack of advancement opportunities and failure to address their needs could lead to skill gaps and increased recruitment costs as the company attempts to fill these positions. 
+- The elevated attrition rates in the Legal and Research departments suggest that employees in these areas are facing significant challenges that affect their decision to remain with the company. These challenges may include higher stress levels, inadequate support, or insufficient career development opportunities. The company risks losing key talent in these critical departments, which could negatively impact overall performance and innovation. 
+- High attrition rates among Official Assistants, Statisticians, and Executive Secretaries indicate that employees in these roles may not be finding sufficient engagement, recognition, or growth opportunities and overload work. The turnover in these positions can disrupt operations and increase the costs associated with hiring and training replacements. 
+- The higher turnover rate at the headquarters suggests potential issues with the work environment or employee satisfaction specific to that location. If not addressed, this could lead to increased recruitment and onboarding costs, as well as a loss of institutional knowledge. On the other hand, the lower attrition rates among remote employees indicate that flexibility and a positive work-life balance are effective in retaining talent.
+- Elevated turnover rates in Indiana and Ohio highlight that employees in these states are more likely to leave the company, which could adversely affect operations and profitability in these regions. High turnover in these states can result in increased recruitment costs, gaps in institutional knowledge, and disruptions in team dynamics. Addressing the specific factors driving turnover in these locations is crucial for improving retention and stabilizing the workforce in these regions. 
+- The high attrition rate among long-tenured employees is alarming because it signifies the loss of experienced workers who possess valuable institutional knowledge. This turnover can disrupt operational continuity and escalate costs related to replacing seasoned staff. Therefore, it is crucial for the company to focus on retaining long-term employees to preserve stability and organizational memory.
+- Additionally, the elevated attrition rate observed in August indicates a need for targeted retention strategies during this peak period. Identifying and addressing the underlying causes of turnover in August can prevent further increases in attrition rates.
+There is a significant difference in retention between employees hired more recently and those with longer tenure, the company appear to be losing more of its long-term employees indicating burnout or desire for new challenge while recently hired employees are still integrating into the company and are more engaged with their roles.
+
+### Recommendation
+To effectively tackle employee turnover, the company needs to implement a series of targeted strategies aimed at improving retention across different groups and locations. Key areas for focus include gathering direct feedback, enhancing diversity and inclusion, and addressing specific departmental and regional challenges.
+- Feedback and Support for Female Employees: The company should start by actively seeking direct feedback from female employees to identify specific challenges they face, such as issues related to work-life balance, pay equity, or career advancement opportunities. Develop mentorship and career development initiatives specifically designed to support female employees, fostering their professional growth and increasing retention rates.
+Conduct an internal review of existing gender-related workplace policies to ensure they promote an inclusive and supportive environment for all employees.
+- Strengthening Diversity and Inclusion: The company should enhance its diversity and inclusion initiatives with a focus on creating a supportive environment for employees of diverse racial backgrounds, including those identifying with multiple races. Establish mentorship programs and employee resource groups that cater specifically to diverse employees and implement ongoing diversity training to foster an inclusive workplace culture.
+- Retention Strategies for Younger Employees: Provide opportunities for career growth, mentorship, and clear pathways for advancement and conduct periodic check-ins to address concerns and ensure job roles align with career aspirations, helping employees feel valued and motivated.
+- Addressing Turnover in Department: Conduct Surveys and Exit Interviews and use the detailed surveys and exit interviews to identify specific reasons for dissatisfaction. Enhance career progression opportunities, reduce workload stress, and provide additional support and resources and also introduce regular professional development and mentorship programs to engage and retain employees.
+- Improving Retention in High-Turnover Roles: Provide opportunities for skill development, job enrichment, and career advancement also, allow employees to take on diverse responsibilities or engage in cross-training for other positions
+- Reducing Turnover at Headquarters: Implement Flexible Work Arrangements offer flexible work options similar to those available to remote employees and improve Workplace Environment: Enhance the workplace environment, provide stress management resources, and offer career growth opportunities.
+ - Location-Specific Strategies: Conduct Location-Specific Assessments: Review compensation, work conditions, and employee engagement programs in these areas and provide incentives and improve work environments based on specific regional needs.
+- Targeted Retention Strategies for Long-Tenured Employees: One such approach is to offer career development opportunities. Even long-tenured employees need to feel that they have room to grow within the company. By providing continuous learning and professional growth programs, organizations can keep these employees motivated and engaged, this could include offering opportunities for advancement, additional training, or new challenges that align with their experience and expertise.
+Another effective strategy is to implement mentorship programs. Senior employees can serve as mentors to newer staff, which not only leverages their experience but also strengthens their connection to the company.
+Recognition initiatives are also crucial. Acknowledging and celebrating the contributions of long-tenured employees reinforces their value to the company. Regular recognition, whether through formal awards, personalized gestures, or public acknowledgment, can help long-term employees feel appreciated and respected for their ongoing dedication.
+- Retention strategy for the peak month: Implement initiatives to keep employees engaged and satisfied throughout the year, especially during the summer months. This could include flexible work options or additional incentives, consider introducing retention bonuses or other rewards for employees who stay through critical periods, such as August.
+
+ By implementing these recommendations, the company can potentially reduce turnover rates and enhance overall employee satisfaction, leading to a more stable workforce.
+
+# THANK YOU
+                                                                                
+
+
 
   
 
