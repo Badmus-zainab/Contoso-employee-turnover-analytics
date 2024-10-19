@@ -160,22 +160,42 @@ The key insight from this analysis shows that Official Assistant, Statistician, 
 
 - The attrition rate by location - Analyzing attrition rates at headquarters versus remote locations reveals differences in employee retention based on work environment. This insight helps organizations understand if remote work offers better flexibility and satisfaction or if headquarters roles face unique challenges, enabling more effective retention strategies tailored to each work setting.
 
-  ```sql
-  WITH employee_counts AS (
- SELECT location,
+```sql
+WITH employee_counts AS ( SELECT location,COUNT (*) AS total_employee, SUM (CASE WHEN termdate_only IS NOT NULL THEN 1 ELSE 0 END) AS employee_left FROM NEW_HR_DATA
+GROUP BY location)SELECT location, total_employee, employee_left, CASE WHEN total_employee > 0 THEN
+CAST (ROUND ((employee_left * 100.0 /total_employee),2) AS DECIMAL (5,2))ELSE 0END AS attrition_rate_by_location
+FROM employee_countsORDER BY attrition_rate_by_location DESC;
+```
+#### Report/Visuals
+![image](https://github.com/user-attachments/assets/c282cf58-a04c-4d9b-8ec5-700701c82102)
+![image](https://github.com/user-attachments/assets/cc1dc107-b747-4630-a771-35bdbb7f4c4c)
+##### Key insight
+This may indicate that employees working at the headquarters face more stress or challenges compared to their remote counterparts. Headquarters employees might deal with longer commutes, office politics, or a stricter work environment, leading to higher dissatisfaction and, consequently, higher attrition. In contrast, remote employees may enjoy more flexibility and work-life balance, resulting in lower turnover.
+
+- The attrition rate by location in city - Analyzing attrition rates by city location helps identify geographic areas with higher employee turnover. Understanding these differences allows organizations to tailor retention strategies to address the unique needs of employees in different cities.
+
+ ```sql
+WITH employee_counts AS (
+ SELECT location city, 
  COUNT (*) AS total_employee,
  SUM (CASE WHEN termdate_only IS NOT NULL THEN 1 ELSE 0 END)
  AS employee_left
  FROM NEW_HR_DATA 
- GROUP BY location)
- SELECT location, total_employee, employee_left,
+ GROUP BY location_city)
+ SELECT location_city, total_employee, employee_left,
  CASE WHEN total_employee > 0 THEN
-  CAST (ROUND ((employee_left * 100.0 /total_employee),2) AS DECIMAL (5,2))
+ CAST (ROUND ((employee_left * 100.0 /total_employee),2) AS DECIMAL (5,2))
  ELSE 0
- END AS attrition_rate_by_location
+ END AS attrition_rate_by_location_city
  FROM employee_counts
- ORDER BY attrition_rate_by_location DESC;
-```
+ ORDER BY attrition_rate_by_location_city DESC;
+ ```
+ #### Report/Visuals
+ ![image](https://github.com/user-attachments/assets/a60e45b9-36d7-4ac6-985a-b5d6fca9c5c4)
+![image](https://github.com/user-attachments/assets/d02b639c-ebfd-43b5-812d-7b8fbc9530bc)
+##### Key insight
+High attrition in specific locations can indicate underlying issues such as unfavorable working conditions, lack of local resources, or a disconnect between the company's culture and the local workforce. Employees in these locations may also face longer commutes, limited access to amenities, or less competitive compensation compared to other regions, contributing to their decision to leave.
+
 
   
 
